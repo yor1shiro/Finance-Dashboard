@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Dashboard - Professional</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>💰 Finance</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" onclick="switchTab('dashboard')">📊 Dashboard</a>
+            <a href="#" class="nav-item" onclick="switchTab('transactions')">💳 Transactions</a>
+            <a href="#" class="nav-item" onclick="switchTab('budgets')">💵 Budgets</a>
+            <a href="#" class="nav-item" onclick="switchTab('goals')">🎯 Goals</a>
+            <a href="#" class="nav-item" onclick="switchTab('analytics')">📈 Analytics</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="btn-logout">Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Financial Dashboard</h1>
+                <p id="userGreeting">Welcome back!</p>
+            </div>
+            <div class="header-right">
+                <div id="currentDate" class="current-date"></div>
+            </div>
+        </header>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="dashboard-grid">
+                <!-- Summary Cards -->
+                <div class="card summary-card income">
+                    <h3>Total Income</h3>
+                    <p class="amount" id="totalIncome">$0.00</p>
+                    <p class="subtext">This month</p>
+                </div>
+                <div class="card summary-card expense">
+                    <h3>Total Expenses</h3>
+                    <p class="amount" id="totalExpenses">$0.00</p>
+                    <p class="subtext">This month</p>
+                </div>
+                <div class="card summary-card balance">
+                    <h3>Balance</h3>
+                    <p class="amount" id="balance">$0.00</p>
+                    <p class="subtext" id="balanceSubtext">Available</p>
+                </div>
+                <div class="card summary-card savings-rate">
+                    <h3>Savings Rate</h3>
+                    <p class="amount" id="savingsRate">0%</p>
+                    <p class="subtext">Of income</p>
+                </div>
+
+                <!-- Budget Alerts -->
+                <div class="card full-width" id="budgetAlertsContainer" style="display:none;">
+                    <h3>⚠️ Budget Alerts</h3>
+                    <div id="budgetAlerts" class="alerts-list"></div>
+                </div>
+
+                <!-- Expense Chart -->
+                <div class="card chart-container">
+                    <h3>Spending by Category</h3>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+
+                <!-- Goals Preview -->
+                <div class="card goals-container">
+                    <h3>Savings Goals</h3>
+                    <div id="goalsPreview"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Tab -->
+        <div class="tab-content" id="transactions">
+            <div class="card">
+                <h2>Add Transaction</h2>
+                <form id="transactionForm" class="form-grid">
+                    <select id="transactionType" required>
+                        <option value="">Select Type</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <input type="text" id="category" placeholder="Category" required>
+                    <input type="number" id="amount" placeholder="Amount" step="0.01" required>
+                    <input type="date" id="date" required>
+                    <textarea id="description" placeholder="Description (optional)" rows="2"></textarea>
+                    <label style="display: flex; align-items: center; gap: 10px; grid-column: 1/-1;">
+                        <input type="checkbox" id="isRecurring"> Recurring Transaction
+                    </label>
+                    <select id="recurringFrequency" style="display:none; grid-column: 1/-1;">
+                        <option value="">Select frequency</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                    <button type="submit" class="btn-primary">Add Transaction</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Transaction History</h2>
+                <div id="transactionsList" class="transactions-list"></div>
+            </div>
+        </div>
+
+        <!-- Budgets Tab -->
+        <div class="tab-content" id="budgets">
+            <div class="card">
+                <h2>Set Budget</h2>
+                <form id="budgetForm" class="form-grid">
+                    <input type="text" id="budgetCategory" placeholder="Category" required>
+                    <input type="number" id="budgetLimit" placeholder="Monthly Limit" step="0.01" required>
+                    <input type="number" id="alertThreshold" placeholder="Alert Threshold (%)" min="0" max="100" value="80">
+                    <button type="submit" class="btn-primary">Set Budget</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Your Budgets</h2>
+                <div id="budgetsList" class="budgets-list"></div>
+            </div>
+        </div>
+
+        <!-- Goals Tab -->
+        <div class="tab-content" id="goals">
+            <div class="card">
+                <h2>Create Savings Goal</h2>
+                <form id="goalForm" class="form-grid">
+                    <input type="text" id="goalName" placeholder="Goal Name" required>
+                    <input type="number" id="goalTarget" placeholder="Target Amount" step="0.01" required>
+                    <input type="date" id="goalDeadline">
+                    <select id="goalPriority">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                    <button type="submit" class="btn-primary">Create Goal</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Your Goals</h2>
+                <div id="goalsList" class="goals-list"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="tab-content" id="analytics">
+            <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));">
+                <!-- 12-Month Trend Chart -->
+                <div class="card">
+                    <h2>12-Month Income vs Expenses Trend</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Income vs Expenses Pie Chart -->
+                <div class="card">
+                    <h2>Income vs Expenses Distribution</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="incomeExpenseChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Monthly Growth Chart -->
+                <div class="card">
+                    <h2>Monthly Savings Growth</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="savingsGrowthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown Bar Chart -->
+                <div class="card">
+                    <h2>Top Expense Categories</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="categoryBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Budget vs Spending Radar -->
+                <div class="card">
+                    <h2>Budget Performance</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="budgetRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Goals Progress -->
+                <div class="card">
+                    <h2>Goals Achievement</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="goalsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Income Sources -->
+                <div class="card">
+                    <h2>Income Sources</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="incomeSourcesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Spending Trend by Category -->
+                <div class="card">
+                    <h2>Category Spending Trend</h2>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="categoryTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Summary Statistics -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h2>Financial Summary</h2>
+                    <div class="stats-grid" id="analyticsStats"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

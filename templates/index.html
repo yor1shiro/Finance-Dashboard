@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>💰 Personal Finance Dashboard</h1>
+            <p class="subtitle">Track, Budget, and Achieve Your Financial Goals</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-button" data-tab="transactions">Transactions</button>
+            <button class="tab-button" data-tab="budgets">Budgets</button>
+            <button class="tab-button" data-tab="goals">Goals</button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="dashboard-grid">
+                <!-- Summary Cards -->
+                <div class="card summary-card income">
+                    <h3>Total Income</h3>
+                    <p class="amount" id="totalIncome">$0.00</p>
+                </div>
+                <div class="card summary-card expense">
+                    <h3>Total Expenses</h3>
+                    <p class="amount" id="totalExpenses">$0.00</p>
+                </div>
+                <div class="card summary-card balance">
+                    <h3>Balance</h3>
+                    <p class="amount" id="balance">$0.00</p>
+                </div>
+
+                <!-- Expense Breakdown Chart -->
+                <div class="card chart-container">
+                    <h3>Spending by Category</h3>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+
+                <!-- Savings Goals Progress -->
+                <div class="card goals-container">
+                    <h3>Savings Goals</h3>
+                    <div id="goalsPreview"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Tab -->
+        <div class="tab-content" id="transactions">
+            <div class="card">
+                <h2>Add Transaction</h2>
+                <form id="transactionForm" class="form-grid">
+                    <input type="hidden" id="transactionId">
+                    <select id="transactionType" required>
+                        <option value="">Select Type</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <input type="text" id="category" placeholder="Category" required>
+                    <input type="number" id="amount" placeholder="Amount" step="0.01" required>
+                    <input type="date" id="date" required>
+                    <textarea id="description" placeholder="Description (optional)" rows="2"></textarea>
+                    <button type="submit" class="btn-primary">Add Transaction</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Transaction History</h2>
+                <div id="transactionsList" class="transactions-list"></div>
+            </div>
+        </div>
+
+        <!-- Budgets Tab -->
+        <div class="tab-content" id="budgets">
+            <div class="card">
+                <h2>Set Budget</h2>
+                <form id="budgetForm" class="form-grid">
+                    <input type="hidden" id="budgetId">
+                    <input type="text" id="budgetCategory" placeholder="Category (e.g., Food, Transportation)" required>
+                    <input type="number" id="budgetLimit" placeholder="Monthly Limit" step="0.01" required>
+                    <button type="submit" class="btn-primary">Set Budget</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Your Budgets</h2>
+                <div id="budgetsList" class="budgets-list"></div>
+            </div>
+        </div>
+
+        <!-- Goals Tab -->
+        <div class="tab-content" id="goals">
+            <div class="card">
+                <h2>Create Savings Goal</h2>
+                <form id="goalForm" class="form-grid">
+                    <input type="hidden" id="goalId">
+                    <input type="text" id="goalName" placeholder="Goal Name (e.g., Emergency Fund)" required>
+                    <input type="number" id="goalTarget" placeholder="Target Amount" step="0.01" required>
+                    <input type="date" id="goalDeadline" placeholder="Target Deadline (optional)">
+                    <button type="submit" class="btn-primary">Create Goal</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Your Goals</h2>
+                <div id="goalsList" class="goals-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
