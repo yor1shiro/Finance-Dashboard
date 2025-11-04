@@ -120,8 +120,8 @@ Database
 
 1. **Clone or download the repository**
    ```bash
-   git clone https://github.com/yourusername/womenji.git
-   cd womenji
+   git clone https://github.com/yor1shiro/finance-dashboard.git
+   cd finance-dashboard
    ```
 
 2. **Create a virtual environment (recommended)**
@@ -451,14 +451,6 @@ Contributions welcome! Please:
 
 ---
 
-## 📞 Contact & Support
-
-For questions or issues:
-- Open an issue on GitHub
-- Check documentation above
-- Review code comments for technical details
-
----
 
 **Built with ❤️ for financial freedom**
 
