@@ -154,7 +154,7 @@ Database
 ## 📁 Project Structure
 
 ```
-womenji/
+finance-dashboard/
 ├── app.py                          # Flask backend (345 lines)
 │   ├── Database models (User, Transaction, Budget, SavingsGoal)
 │   ├── Authentication endpoints (signup, login, logout)
